@@ -1,8 +1,26 @@
 name: trad-feature-extraction
 channels:
   - defaults
+  - conda-forge
+  - pytorch
+  - nvidia
+  - stanfordnlp
 dependencies:
   - python==3.10
-  - conda-forge::gsutil
-  - bioconda::p7zip
-  - nvidia::cuda-toolkit
+  - cuda-toolkit
+  - ipython
+  - jupyter
+  - libsndfile==1.0.31
+  - nltk
+  - numpy
+  - pandas
+  - pytorch
+  - pytorch-cuda=12.1
+  - seaborn
+  - spacy
+  - stanza
+  - wordcloud
+  - rouge-score
+  - evaluate
+  - bert_score
+  - python-levenshtein

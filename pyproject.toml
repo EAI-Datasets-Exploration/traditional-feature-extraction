@@ -1,28 +1,7 @@
 [project]
 name = "traditional_feature_extraction"
 dynamic = ["version"]
-dependencies = [
-    "bert_score",
-    "evaluate",
-    "gcsfs",
-    "google-auth==2.17.0",
-    "ipython",
-    "jupyter",
-    "nltk",
-    "numpy",
-    "pandas",
-    "pillow",
-    "python-Levenshtein",
-    "rouge-score",
-    "tensorflow_datasets",
-    "tensorflow==2.9",
-    "torch==2.1.2",
-    "seaborn",
-    "spacy",
-    "stanza",
-    "wordcloud",
-    "openpyxl",
-]
+
 requires-python = "~=3.10"
 
 [build-system]
