@@ -51,7 +51,8 @@ if __name__ == "__main__":
         df = get_constituency_parse_tree(
             df, 
             nl_column="nl_instructions", 
-            parse_tree_column="constituency_parse_tree"
+            parse_tree_column="constituency_parse_tree",
+            num_models_per_gpu=100,
         )
         print("Completed Constituency Parsing!")
 

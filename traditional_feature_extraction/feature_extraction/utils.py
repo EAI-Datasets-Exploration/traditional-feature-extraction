@@ -87,7 +87,7 @@ def parse_text_on_gpu(gpu_id, texts, num_models_per_gpu=1):
     return results
 
 # The function that runs the parsing process with batching
-def get_constituency_parse_tree(df: pd.DataFrame, nl_column: str, parse_tree_column="constit_parse_tree", num_models_per_gpu=64) -> pd.DataFrame:
+def get_constituency_parse_tree(df: pd.DataFrame, nl_column: str, parse_tree_column="constit_parse_tree", num_models_per_gpu=1) -> pd.DataFrame:
     # Initialize the stanza pipeline with GPU enabled
     num_gpus = torch.cuda.device_count()
     texts = df[nl_column].tolist()
