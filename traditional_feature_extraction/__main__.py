@@ -74,4 +74,4 @@ if __name__ == "__main__":
     if not os.path.exists(out_path):
         os.makedirs(out_path, exist_ok=True)
 
-    df.to_csv(out_path + "/" + dataset_name + "_results.csv")
+    df.to_csv(out_path + "/" + dataset_name + "_results.csv", index=False)
