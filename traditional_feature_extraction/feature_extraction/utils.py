@@ -58,6 +58,13 @@ START: EVERYTHING TO DO WITH CONSTITUENCY PARSING GPU PARALLELIZATION!!!
 # TODO: Fix batching for ALFRED -- I would suspect that ALFRED row entries contain multiple sentences.
 # maybe include a preprocessing step in ALFRED dataset_download pkg that handles this --- parses out multiple
 # sentences as separate rows.
+
+# To improve parallelization, setup multiple pipeline processes on GPU and reassmble. I would have to write code to
+#  manage the total number of CUDA devices on the system in order to split things up.
+
+# pipeline object accepts: device parameter, e.g., cuda:0 or cuda:1 or ...
+
+# see respecting document boundaries here: https://stanfordnlp.github.io/stanza/getting_started.html#building-a-pipeline
 """
 # The function that runs the parsing process with batching (no multiprocessing)
 def get_constituency_parse_tree(df: pd.DataFrame, nl_column: str, parse_tree_column="constit_parse_tree", batch_size=32768) -> pd.DataFrame:
