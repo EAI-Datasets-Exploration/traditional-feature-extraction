@@ -7,10 +7,11 @@ column names. Then each function outputs a pandas dataframe.
 """
 from concurrent.futures import ProcessPoolExecutor
 import math
-
+import multiprocessing as mp
 import pandas as pd
 import spacy
 import stanza
+import torch
 
 
 def drop_na(df: pd.DataFrame, nl_column: str) -> pd.DataFrame:
@@ -54,75 +55,56 @@ def get_dep_parse_tree(
 
 """
 START: EVERYTHING TO DO WITH CONSTITUENCY PARSING GPU PARALLELIZATION!!!
-
-# TODO: Fix batching for ALFRED -- I would suspect that ALFRED row entries contain multiple sentences.
-# maybe include a preprocessing step in ALFRED dataset_download pkg that handles this --- parses out multiple
-# sentences as separate rows.
-
-# To improve parallelization, setup multiple pipeline processes on GPU and reassmble. I would have to write code to
-#  manage the total number of CUDA devices on the system in order to split things up.
-
-# pipeline object accepts: device parameter, e.g., cuda:0 or cuda:1 or ...
-
-# see respecting document boundaries here: https://stanfordnlp.github.io/stanza/getting_started.html#building-a-pipeline
 """
-# The function that runs the parsing process with batching (no multiprocessing)
-def get_constituency_parse_tree(df: pd.DataFrame, nl_column: str, parse_tree_column="constit_parse_tree", batch_size=32768) -> pd.DataFrame:
-    # Initialize the stanza pipeline with GPU enabled
-
-    nlp = stanza.Pipeline(lang="en", processors="pos, tokenize, constituency", use_gpu=True) 
-
-    # Define the batch parsing function to handle multiple texts at once using GPU
-    def batch_parse(texts):    
-        # Join texts with a separator to treat them as separate documents
-        doc = nlp("\n\n".join(texts))  # Use a double newline to separate texts in the batch
-        
-        # Ensure that the number of parsed sentences matches the number of input texts
-        if len(doc.sentences) != len(texts):
-            parsed_texts = set(doc.sentences)
-            original_texts = set(texts)
-
-            # Find items in list1 but not in list2
-            only_in_list1 = parsed_texts.difference(original_texts)
-            
-            print(f"The items added by parser:\n{only_in_list1}")
-            raise ValueError(f"Number of parsed sentences ({len(doc.sentences)}) does not match number of input texts ({len(texts)})")
-        
-        return [sentence.constituency for sentence in doc.sentences]  # Return list of parse trees
-
-    # A helper function to process batches of rows
-    def process_batch(batch_rows, nl_column):
-        # Extract the text for the batch
-        batch_texts = batch_rows[nl_column].tolist()  # Convert the column to a list of texts
-        
-        # Sanitize input by stripping extra newlines and whitespaces
-        batch_texts = [text.strip() for text in batch_texts]
-        
-        # Perform the batch parsing on GPU
-        return batch_parse(batch_texts)
-
-    df_copy = df.copy()
+# Function to load multiple Stanza models on the same GPU
+def load_stanza_on_gpu(gpu_id, num_models_per_gpu=1):
+    device = f'cuda:{gpu_id}' if torch.cuda.is_available() else 'cpu'
     
-    # Split the rows into batches
-    num_batches = math.ceil(len(df_copy) / batch_size)
-    row_batches = [df_copy.iloc[i*batch_size:(i+1)*batch_size] for i in range(num_batches)]
+    # Load multiple models on the same GPU
+    models = []
+    for _ in range(num_models_per_gpu):
+        nlp = stanza.Pipeline('en', processors='pos,tokenize,constituency', use_gpu=True, device=device)
+        models.append(nlp)
     
-    # Store results of parsing
+    return models
+
+# Parse text using Stanza models on a specific GPU
+def parse_text_on_gpu(gpu_id, texts, num_models_per_gpu=1):
+    models = load_stanza_on_gpu(gpu_id, num_models_per_gpu=num_models_per_gpu)
+    
     results = []
-    for batch in row_batches:
-        batch_result = process_batch(batch, nl_column)
-        results.extend(batch_result)
     
-    # Ensure that the number of results matches the number of rows in the DataFrame
-    if len(results) != len(df_copy):
-        raise ValueError(f"Number of results ({len(results)}) does not match number of rows in DataFrame ({len(df_copy)})")
+    # Distribute text across models
+    model_count = len(models)
+    chunk_size = len(texts) // model_count
     
-    # Assign the results to the DataFrame
-    df_copy[parse_tree_column] = results
+    for i, nlp in enumerate(models):
+        model_texts = texts[i * chunk_size : (i + 1) * chunk_size] if i < model_count - 1 else texts[i * chunk_size:]
+        for text in model_texts:
+            doc = nlp(text)
+            results.append(doc)
     
-    return df_copy
+    return results
 
+# The function that runs the parsing process with batching
+def get_constituency_parse_tree(df: pd.DataFrame, nl_column: str, parse_tree_column="constit_parse_tree", num_models_per_gpu=64) -> pd.DataFrame:
+    # Initialize the stanza pipeline with GPU enabled
+    num_gpus = torch.cuda.device_count()
+    texts = df[nl_column].tolist()
+    chunks = [texts[i::num_gpus] for i in range(num_gpus)]
 
+    # Distribute the work across GPUs
+    with mp.Pool(processes=num_gpus) as pool:
+        results = pool.starmap(parse_text_on_gpu, [(gpu_id, chunks[gpu_id], num_models_per_gpu) for gpu_id in range(num_gpus)])
+    
+    results = [item for sublist in results for item in sublist]
+    
+    # Extract constituency trees
+    constituency_trees = [sentence.constituency for doc in results for sentence in doc.sentences]
+    
+    # Update the DataFrame with the results
+    df[parse_tree_column] = constituency_trees
+    return df
 """
 END: EVERYTHING TO DO WITH CONSTITUENCY PARSING GPU PARALLELIZATION!!!
 """

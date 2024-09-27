@@ -8,6 +8,7 @@ import configparser
 import json
 import os
 import pandas as pd
+import multiprocessing as mp
 import numpy as np
 
 from traditional_feature_extraction.feature_extraction.preprocessing import clean_and_standardize_text
@@ -21,6 +22,7 @@ from traditional_feature_extraction.feature_extraction.utils import (
 )
 
 if __name__ == "__main__":
+    mp.set_start_method('spawn', force=True)
     config = configparser.ConfigParser()
     config.read("../traditional-feature-extraction/config.ini")
 
