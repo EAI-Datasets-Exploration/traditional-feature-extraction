@@ -1,1 +1,0 @@
-Preserving file structure. I expect all datasets have their own directory which holds many *.csv or a massive *.csv of all necessary results to build data visualizations with matplotlib or seaborn.

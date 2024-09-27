@@ -8,10 +8,8 @@ requires-python = "~=3.10"
 requires = ["setuptools>=40.6.0"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["feature_extraction", "data_viz"]  # alternatively: `exclude = ["additional*"]`
-namespaces = false
+[tool.setuptools]
+packages = ["traditional_feature_extraction"]
 
 [tool.setuptools_scm]
 version_scheme = "guess-next-dev"

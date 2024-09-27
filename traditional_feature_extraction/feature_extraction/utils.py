@@ -5,6 +5,8 @@ analyzing and characterizing the complexity of each HRI dataset.
 Each function expects a pandas dataframe with relevantly defined
 column names. Then each function outputs a pandas dataframe.
 """
+from concurrent.futures import ProcessPoolExecutor
+import math
 
 import pandas as pd
 import spacy
@@ -19,18 +21,23 @@ def get_num_unique_values(df: pd.DataFrame, nl_column: str) -> int:
     return len(df[nl_column].unique())
 
 
-def spacy_processing(
-    df: pd.DataFrame, nl_column: str, spacy_col="spacy_parse"
-) -> pd.DataFrame:
+def spacy_processing(df: pd.DataFrame, nl_column: str, spacy_col="spacy_parse", batch_size=1000) -> pd.DataFrame:
     df_copy = df.copy()
-    nlp = spacy.load("en_core_web_sm")
+    
+    # Load the spaCy model and disable unnecessary components
+    nlp = spacy.load("en_core_web_sm", disable=["ner", "parser"])  # Disable components you don't need
 
-    def parse(raw_text: str) -> dict:
-        doc = nlp(raw_text)
-        return doc.to_json()
+    # Use the nlp.pipe() method for batch processing
+    texts = df_copy[nl_column].tolist()  # Get all texts in a list
 
-    df_copy.loc[:, spacy_col] = df_copy.loc[:, nl_column].apply(parse)
+    # Use nlp.pipe() to process texts in batches
+    spacy_docs = nlp.pipe(texts, batch_size=batch_size)
+
+    # Convert each document to JSON and store in the new column
+    df_copy[spacy_col] = [doc.to_json() for doc in spacy_docs]
+
     return df_copy
+
 
 
 def get_dep_parse_tree(
@@ -45,20 +52,73 @@ def get_dep_parse_tree(
     df[parse_tree_column] = df[spacy_col].apply(get_dep_tree)
     return df
 
+"""
+START: EVERYTHING TO DO WITH CONSTITUENCY PARSING GPU PARALLELIZATION!!!
 
-def get_constituency_parse_tree(
-    df: pd.DataFrame, nl_column: str, parse_tree_column="constit_parse_tree"
-) -> pd.DataFrame:
+# TODO: Fix batching for ALFRED -- I would suspect that ALFRED row entries contain multiple sentences.
+# maybe include a preprocessing step in ALFRED dataset_download pkg that handles this --- parses out multiple
+# sentences as separate rows.
+"""
+# The function that runs the parsing process with batching (no multiprocessing)
+def get_constituency_parse_tree(df: pd.DataFrame, nl_column: str, parse_tree_column="constit_parse_tree", batch_size=32768) -> pd.DataFrame:
+    # Initialize the stanza pipeline with GPU enabled
+
+    nlp = stanza.Pipeline(lang="en", processors="pos, tokenize, constituency", use_gpu=True) 
+
+    # Define the batch parsing function to handle multiple texts at once using GPU
+    def batch_parse(texts):    
+        # Join texts with a separator to treat them as separate documents
+        doc = nlp("\n\n".join(texts))  # Use a double newline to separate texts in the batch
+        
+        # Ensure that the number of parsed sentences matches the number of input texts
+        if len(doc.sentences) != len(texts):
+            parsed_texts = set(doc.sentences)
+            original_texts = set(texts)
+
+            # Find items in list1 but not in list2
+            only_in_list1 = parsed_texts.difference(original_texts)
+            
+            print(f"The items added by parser:\n{only_in_list1}")
+            raise ValueError(f"Number of parsed sentences ({len(doc.sentences)}) does not match number of input texts ({len(texts)})")
+        
+        return [sentence.constituency for sentence in doc.sentences]  # Return list of parse trees
+
+    # A helper function to process batches of rows
+    def process_batch(batch_rows, nl_column):
+        # Extract the text for the batch
+        batch_texts = batch_rows[nl_column].tolist()  # Convert the column to a list of texts
+        
+        # Sanitize input by stripping extra newlines and whitespaces
+        batch_texts = [text.strip() for text in batch_texts]
+        
+        # Perform the batch parsing on GPU
+        return batch_parse(batch_texts)
+
     df_copy = df.copy()
-    nlp = stanza.Pipeline(lang="en", processors="tokenize,pos,constituency")
-
-    def parse(raw_text: str) -> dict:
-        doc = nlp(raw_text)
-        return doc.sentences[0].constituency
-
-    df_copy.loc[:, parse_tree_column] = df_copy.loc[:, nl_column].apply(parse)
+    
+    # Split the rows into batches
+    num_batches = math.ceil(len(df_copy) / batch_size)
+    row_batches = [df_copy.iloc[i*batch_size:(i+1)*batch_size] for i in range(num_batches)]
+    
+    # Store results of parsing
+    results = []
+    for batch in row_batches:
+        batch_result = process_batch(batch, nl_column)
+        results.extend(batch_result)
+    
+    # Ensure that the number of results matches the number of rows in the DataFrame
+    if len(results) != len(df_copy):
+        raise ValueError(f"Number of results ({len(results)}) does not match number of rows in DataFrame ({len(df_copy)})")
+    
+    # Assign the results to the DataFrame
+    df_copy[parse_tree_column] = results
+    
     return df_copy
 
+
+"""
+END: EVERYTHING TO DO WITH CONSTITUENCY PARSING GPU PARALLELIZATION!!!
+"""
 
 def get_seq_len(
     df: pd.DataFrame, spacy_col="spacy_parse", word_len_column="word_len"
