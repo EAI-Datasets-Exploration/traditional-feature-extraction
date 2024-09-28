@@ -1,25 +1,31 @@
+"""
+Any preprocessing steps necessary to clean the downloaded datasets from the
+dataset-download-scripts package to ready them for feature extraction.
+"""
+
 import pandas as pd
 import string
 
+
 def clean_and_standardize_text(df: pd.DataFrame, nl_column: str) -> pd.DataFrame:
     df_copy = df.copy()  # Make a copy of the dataframe to avoid modifying the original
-    
+
     # Define a helper function to clean and standardize text
     def clean_text(text):
         # 1. Convert text to string in case there are NaNs or other non-string values
         text = str(text)
-        
+
         # 2. Strip leading/trailing spaces
         text = text.strip()
-        
+
         # 3. Replace multiple spaces with a single space
         text = " ".join(text.split())
-        
+
         # 4. Remove punctuation using string.punctuation
         text = text.translate(str.maketrans("", "", string.punctuation))
-        
+
         return text
-    
+
     # Apply the clean_text function to the specified column
     df_copy[nl_column] = df_copy[nl_column].apply(clean_text)
 

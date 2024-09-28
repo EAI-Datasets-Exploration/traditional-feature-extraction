@@ -8,11 +8,11 @@ dev_install:
 
 .PHONY: lint
 lint:
-	python3 -m pylint src/
+	python3 -m pylint traditional_feature_extraction/
 
 .PHONY: format
 format:
-	python3 -m black src/ 
+	python3 -m black traditional_feature_extraction/
 
 .PHONY: test
 test:
