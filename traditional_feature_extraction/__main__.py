@@ -18,6 +18,15 @@ from traditional_feature_extraction.feature_extraction.utils import (
     spacy_processing_parallel,
     get_constituency_parse_tree,
 )
+from traditional_feature_extraction.data_viz.utils import (
+    get_word_cloud,
+)
+from traditional_feature_extraction.data_viz.similarity_report import (
+    calc_bleu,
+    calc_rouge,
+    # calc_lev,
+)
+
 
 if __name__ == "__main__":
     # Setup multiprocessing for multi-gpu work
@@ -70,4 +79,40 @@ if __name__ == "__main__":
     if not os.path.exists(out_path):
         os.makedirs(out_path, exist_ok=True)
 
-    df.to_csv(out_path + "/" + dataset_name + "_results.csv", index=False)
+    resulting_fp = out_path + "/" + dataset_name
+    df.to_csv(resulting_fp + "_results.csv", index=False)
+
+    ###
+    ### Building Visualizations
+    ###
+
+    reporting_kwargs = {
+        "run_verb_cloud": config.getboolean("reporting", "run_verb_cloud"),
+        "run_noun_cloud": config.getboolean("reporting", "run_noun_cloud"),
+        "run_rouge_score": config.getboolean("reporting", "run_rouge_score"),
+        "run_bleu_score": config.getboolean("reporting", "run_bleu_score"),
+        "run_levenshtein_distance": config.getboolean(
+            "reporting", "run_levenshtein_distance"
+        ),
+    }
+
+    if any(reporting_kwargs.values()):
+        if reporting_kwargs.get("run_verb_cloud"):
+            get_word_cloud(resulting_fp + "_results.csv", column="verbs", bigrams=False)
+        if reporting_kwargs.get("run_noun_cloud"):
+            get_word_cloud(resulting_fp + "_results.csv", column="nouns", bigrams=False)
+        
+        outputs = []
+        if reporting_kwargs.get("run_rouge_score"):
+            outputs.append(calc_rouge(resulting_fp + "_results.csv"))
+        if reporting_kwargs.get("run_bleu_score"):
+            outputs.append(calc_bleu(resulting_fp + "_results.csv"))
+        # if reporting_kwargs.get("run_levenshtein_distance"):
+        #     outputs.append(calc_lev(resulting_fp + "_results.csv"))
+
+        with open(
+            resulting_fp + "_text_similarity_report.txt",
+            "w+",
+            encoding="utf-8",
+        ) as f:
+            f.write("\n".join(outputs))

@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200">
+<style>text{font-family:'Droid Sans Mono';font-weight:normal;font-style:normal;}</style>
+<rect width="100%" height="100%" style="fill:white"></rect>
+<text transform="translate(69,76)" font-size="40" style="fill:rgb(221, 227, 24)">table</text>
+<text transform="translate(348,170) rotate(-90)" font-size="37" style="fill:rgb(64, 69, 136)">sink</text>
+<text transform="translate(25,44)" font-size="35" style="fill:rgb(43, 117, 142)">counter</text>
+<text transform="translate(107,116)" font-size="31" style="fill:rgb(213, 226, 26)">right</text>
+<text transform="translate(253,45)" font-size="28" style="fill:rgb(32, 147, 140)">fridge</text>
+<text transform="translate(147,160)" font-size="28" style="fill:rgb(71, 19, 101)">microwave</text>
+<text transform="translate(250,188)" font-size="26" style="fill:rgb(34, 140, 141)">knife</text>
+<text transform="translate(46,148)" font-size="26" style="fill:rgb(46, 179, 124)">left</text>
+<text transform="translate(322,20)" font-size="24" style="fill:rgb(46, 110, 142)">slice</text>
+<text transform="translate(55,117) rotate(-90)" font-size="22" style="fill:rgb(44, 114, 142)">door</text>
+<text transform="translate(225,111)" font-size="22" style="fill:rgb(48, 105, 142)">front</text>
+<text transform="translate(242,91)" font-size="22" style="fill:rgb(205, 225, 29)">side</text>
+<text transform="translate(170,49)" font-size="22" style="fill:rgb(63, 71, 136)">toilet</text>
+<text transform="translate(18,111) rotate(-90)" font-size="22" style="fill:rgb(41, 123, 142)">desk</text>
+<text transform="translate(106,177)" font-size="22" style="fill:rgb(110, 206, 88)">coffee</text>
+<text transform="translate(234,139)" font-size="22" style="fill:rgb(48, 105, 142)">tomato</text>
+<text transform="translate(17,184)" font-size="22" style="fill:rgb(42, 120, 142)">apple</text>
+<text transform="translate(148,21)" font-size="22" style="fill:rgb(66, 65, 134)">cabinet</text>
+<text transform="translate(391,164) rotate(-90)" font-size="22" style="fill:rgb(54, 92, 141)">potato</text>
+<text transform="translate(365,111) rotate(-90)" font-size="22" style="fill:rgb(119, 209, 83)">stove</text>
+<text transform="translate(230,64)" font-size="21" style="fill:rgb(55, 90, 140)">room</text>
+<text transform="translate(1,18)" font-size="20" style="fill:rgb(70, 8, 92)">lamp</text>
+<text transform="translate(3,163)" font-size="20" style="fill:rgb(40, 124, 142)">shelf</text>
+<text transform="translate(105,194)" font-size="19" style="fill:rgb(72, 32, 113)">bread</text>
+<text transform="translate(350,193)" font-size="18" style="fill:rgb(66, 65, 134)">top</text>
+<text transform="translate(168,195)" font-size="18" style="fill:rgb(49, 104, 142)">lettuce</text>
+<text transform="translate(173,128)" font-size="18" style="fill:rgb(62, 73, 137)">pan</text>
+<text transform="translate(112,139)" font-size="18" style="fill:rgb(34, 139, 141)">plate</text>
+<text transform="translate(144,87)" font-size="14" style="fill:rgb(67, 61, 132)">refrigerator</text>
+<text transform="translate(33,140) rotate(-90)" font-size="14" style="fill:rgb(45, 112, 142)">step</text>
+<text transform="translate(12,54) rotate(-90)" font-size="14" style="fill:rgb(90, 200, 100)">turn</text>
+<text transform="translate(72,124)" font-size="14" style="fill:rgb(62, 73, 137)">bed</text>
+<text transform="translate(355,175)" font-size="14" style="fill:rgb(35, 138, 141)">walk</text>
+<text transform="translate(71,92)" font-size="14" style="fill:rgb(68, 191, 112)">chair</text>
+<text transform="translate(274,13)" font-size="14" style="fill:rgb(241, 229, 29)">bowl</text>
+<text transform="translate(193,172)" font-size="14" style="fill:rgb(122, 209, 81)">kitchen</text>
+<text transform="translate(306,73)" font-size="14" style="fill:rgb(37, 131, 142)">cup</text>
+<text transform="translate(82,12)" font-size="14" style="fill:rgb(31, 148, 140)">drawer</text>
+<text transform="translate(67,100)" font-size="14" style="fill:rgb(43, 117, 142)">soap</text>
+<text transform="translate(20,59)" font-size="14" style="fill:rgb(62, 73, 137)">couch</text>
+<text transform="translate(50,20)" font-size="14" style="fill:rgb(57, 85, 140)">box</text>
+<text transform="translate(113,154)" font-size="14" style="fill:rgb(72, 23, 105)">wall</text>
+<text transform="translate(261,125)" font-size="14" style="fill:rgb(205, 225, 29)">end</text>
+<text transform="translate(51,196)" font-size="14" style="fill:rgb(38, 130, 142)">bottle</text>
+<text transform="translate(176,143)" font-size="14" style="fill:rgb(33, 166, 133)">dresser</text>
+<text transform="translate(352,30)" font-size="13" style="fill:rgb(61, 188, 116)">trash</text>
+<text transform="translate(300,160)" font-size="13" style="fill:rgb(132, 212, 75)">mug</text>
+<text transform="translate(208,57)" font-size="12" style="fill:rgb(38, 129, 142)">egg</text>
+<text transform="translate(220,183)" font-size="12" style="fill:rgb(71, 19, 101)">card</text>
+<text transform="translate(250,70)" font-size="12" style="fill:rgb(66, 64, 134)">corner</text>
+<text transform="translate(273,195)" font-size="12" style="fill:rgb(41, 123, 142)">spoon</text>
+<text transform="translate(203,95)" font-size="12" style="fill:rgb(31, 150, 139)">pot</text>
+<text transform="translate(349,128)" font-size="12" style="fill:rgb(50, 100, 142)">key</text>
+<text transform="translate(356,40)" font-size="12" style="fill:rgb(115, 208, 86)">credit</text>
+<text transform="translate(66,161)" font-size="12" style="fill:rgb(59, 187, 117)">glass</text>
+<text transform="translate(286,59)" font-size="12" style="fill:rgb(157, 217, 59)">phone</text>
+<text transform="translate(189,71)" font-size="12" style="fill:rgb(65, 66, 135)">sponge</text>
+<text transform="translate(291,121)" font-size="12" style="fill:rgb(101, 203, 94)">stand</text>
+<text transform="translate(391,77) rotate(-90)" font-size="12" style="fill:rgb(37, 132, 142)">paper</text>
+<text transform="translate(216,131) rotate(-90)" font-size="12" style="fill:rgb(69, 4, 87)">water</text>
+<text transform="translate(6,198)" font-size="12" style="fill:rgb(40, 125, 142)">maker</text>
+<text transform="translate(293,100)" font-size="12" style="fill:rgb(40, 125, 142)">bin</text>
+<text transform="translate(380,83) rotate(-90)" font-size="12" style="fill:rgb(31, 154, 138)">pencil</text>
+<text transform="translate(253,22)" font-size="12" style="fill:rgb(110, 206, 88)">island</text>
+<text transform="translate(222,30)" font-size="12" style="fill:rgb(52, 96, 141)">tub</text>
+<text transform="translate(103,163)" font-size="12" style="fill:rgb(72, 24, 106)">book</text>
+<text transform="translate(66,104) rotate(-90)" font-size="12" style="fill:rgb(194, 223, 35)">fork</text>
+<text transform="translate(79,21)" font-size="12" style="fill:rgb(71, 44, 122)">towel</text>
+<text transform="translate(316,198)" font-size="12" style="fill:rgb(40, 125, 142)">floor</text>
+<text transform="translate(350,139)" font-size="12" style="fill:rgb(99, 203, 95)">pen</text>
+<text transform="translate(183,178)" font-size="12" style="fill:rgb(48, 106, 142)">move</text>
+<text transform="translate(10,148) rotate(-90)" font-size="12" style="fill:rgb(31, 148, 140)">place</text>
+<text transform="translate(12,186) rotate(-90)" font-size="12" style="fill:rgb(37, 132, 142)">bar</text>
+<text transform="translate(177,30)" font-size="12" style="fill:rgb(178, 221, 45)">candle</text>
+<text transform="translate(40,87) rotate(-90)" font-size="12" style="fill:rgb(112, 207, 87)">head</text>
+<text transform="translate(111,89)" font-size="12" style="fill:rgb(72, 38, 119)">back</text>
+<text transform="translate(332,79)" font-size="12" style="fill:rgb(60, 79, 138)">TV</text>
+<text transform="translate(62,111)" font-size="12" style="fill:rgb(69, 5, 89)">remote</text>
+<text transform="translate(81,51)" font-size="10" style="fill:rgb(60, 80, 139)">piece</text>
+<text transform="translate(81,175)" font-size="10" style="fill:rgb(72, 24, 106)">roll</text>
+<text transform="translate(299,146)" font-size="10" style="fill:rgb(72, 35, 116)">sofa</text>
+<text transform="translate(130,8)" font-size="10" style="fill:rgb(64, 69, 136)">rag</text>
+<text transform="translate(294,109)" font-size="10" style="fill:rgb(65, 66, 135)">edge</text>
+<text transform="translate(217,118)" font-size="10" style="fill:rgb(33, 144, 141)">spatula</text>
+<text transform="translate(99,123)" font-size="10" style="fill:rgb(37, 171, 130)">toaster</text>
+<text transform="translate(19,49) rotate(-90)" font-size="10" style="fill:rgb(70, 50, 126)">spray</text>
+<text transform="translate(294,86)" font-size="10" style="fill:rgb(39, 127, 142)">light</text>
+<text transform="translate(352,160)" font-size="10" style="fill:rgb(55, 90, 140)">salt</text>
+<text transform="translate(370,112) rotate(-90)" font-size="10" style="fill:rgb(33, 145, 140)">newspaper</text>
+<text transform="translate(312,131)" font-size="10" style="fill:rgb(129, 211, 77)">clock</text>
+<text transform="translate(27,97) rotate(-90)" font-size="10" style="fill:rgb(110, 206, 88)">laptop</text>
+<text transform="translate(18,143) rotate(-90)" font-size="10" style="fill:rgb(31, 161, 135)">loaf</text>
+<text transform="translate(41,124)" font-size="10" style="fill:rgb(65, 68, 135)">cloth</text>
+<text transform="translate(18,170)" font-size="10" style="fill:rgb(32, 163, 134)">second</text>
+<text transform="translate(398,132) rotate(-90)" font-size="10" style="fill:rgb(33, 165, 133)">tissue</text>
+<text transform="translate(250,33) rotate(-90)" font-size="10" style="fill:rgb(50, 101, 142)">watch</text>
+<text transform="translate(261,172)" font-size="10" style="fill:rgb(61, 188, 116)">cell</text>
+<text transform="translate(321,60)" font-size="10" style="fill:rgb(33, 144, 141)">night</text>
+<text transform="translate(320,28)" font-size="9" style="fill:rgb(64, 70, 136)">center</text>
+<text transform="translate(186,56)" font-size="9" style="fill:rgb(72, 26, 108)">bath</text>
+</svg>

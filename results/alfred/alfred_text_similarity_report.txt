@@ -1,0 +1,2 @@
+Average rouge-l pairwise scores: 0.2146. Stddev: 0.0026.
+Average rouge-1 pairwise scores: 0.2302. Stddev: 0.0013.

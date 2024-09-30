@@ -31,6 +31,8 @@ def clean_and_standardize_text(df: pd.DataFrame, nl_column: str) -> pd.DataFrame
 
     # drop empty rows
     df_copy[nl_column] = df_copy[nl_column].replace("", pd.NA)
+    df_copy = df_copy.dropna(subset=[nl_column])
+
     df_copy[nl_column] = df_copy[nl_column].str.strip()
     df_copy = df_copy.dropna(subset=[nl_column])
     return df_copy

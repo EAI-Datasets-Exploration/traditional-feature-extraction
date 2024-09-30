@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200">
+<style>text{font-family:'Droid Sans Mono';font-weight:normal;font-style:normal;}</style>
+<rect width="100%" height="100%" style="fill:white"></rect>
+<text transform="translate(93,148)" font-size="40" style="fill:rgb(84, 197, 104)">Turn</text>
+<text transform="translate(45,144)" font-size="29" style="fill:rgb(178, 221, 45)">Put</text>
+<text transform="translate(217,173)" font-size="29" style="fill:rgb(210, 226, 27)">Pick</text>
+<text transform="translate(146,169)" font-size="28" style="fill:rgb(72, 36, 117)">walk</text>
+<text transform="translate(279,88)" font-size="24" style="fill:rgb(43, 117, 142)">go</text>
+<text transform="translate(262,39)" font-size="24" style="fill:rgb(41, 122, 142)">left</text>
+<text transform="translate(175,112) rotate(-90)" font-size="24" style="fill:rgb(36, 134, 142)">Place</text>
+<text transform="translate(276,194)" font-size="22" style="fill:rgb(64, 189, 114)">face</text>
+<text transform="translate(213,114)" font-size="19" style="fill:rgb(44, 114, 142)">take</text>
+<text transform="translate(339,106)" font-size="18" style="fill:rgb(54, 93, 141)">Move</text>
+<text transform="translate(311,144)" font-size="15" style="fill:rgb(53, 94, 141)">Open</text>
+<text transform="translate(121,42)" font-size="13" style="fill:rgb(72, 24, 106)">close</text>
+<text transform="translate(85,95)" font-size="10" style="fill:rgb(221, 227, 24)">head</text>
+<text transform="translate(82,103)" font-size="10" style="fill:rgb(101, 203, 94)">Grab</text>
+<text transform="translate(175,86)" font-size="9" style="fill:rgb(63, 71, 136)">look</text>
+<text transform="translate(210,28)" font-size="9" style="fill:rgb(64, 189, 114)">remove</text>
+<text transform="translate(114,112)" font-size="8" style="fill:rgb(84, 197, 104)">hang</text>
+<text transform="translate(37,177)" font-size="8" style="fill:rgb(44, 113, 142)">Cut</text>
+<text transform="translate(275,118)" font-size="8" style="fill:rgb(47, 180, 124)">Slice</text>
+<text transform="translate(46,158)" font-size="8" style="fill:rgb(59, 81, 139)">stand</text>
+<text transform="translate(38,27)" font-size="8" style="fill:rgb(194, 223, 35)">chilled</text>
+<text transform="translate(25,38)" font-size="8" style="fill:rgb(31, 152, 139)">Carry</text>
+<text transform="translate(92,110)" font-size="8" style="fill:rgb(234, 229, 26)">Heat</text>
+<text transform="translate(111,46) rotate(-90)" font-size="8" style="fill:rgb(152, 216, 62)">Bring</text>
+<text transform="translate(322,177)" font-size="8" style="fill:rgb(236, 229, 27)">Wash</text>
+<text transform="translate(28,112)" font-size="8" style="fill:rgb(42, 118, 142)">s</text>
+<text transform="translate(175,101)" font-size="8" style="fill:rgb(94, 201, 98)">facing</text>
+<text transform="translate(41,84)" font-size="8" style="fill:rgb(39, 127, 142)">Chill</text>
+<text transform="translate(335,71)" font-size="8" style="fill:rgb(178, 221, 45)">cross</text>
+<text transform="translate(258,105)" font-size="8" style="fill:rgb(132, 212, 75)">shut</text>
+<text transform="translate(366,77)" font-size="7" style="fill:rgb(157, 217, 59)">Set</text>
+<text transform="translate(362,29)" font-size="7" style="fill:rgb(88, 199, 101)">step</text>
+<text transform="translate(281,154)" font-size="7" style="fill:rgb(72, 32, 113)">Examine</text>
+<text transform="translate(309,119)" font-size="7" style="fill:rgb(33, 144, 141)">cook</text>
+<text transform="translate(295,62)" font-size="7" style="fill:rgb(72, 38, 119)">rinse</text>
+<text transform="translate(214,46)" font-size="7" style="fill:rgb(55, 91, 141)">cool</text>
+<text transform="translate(312,80)" font-size="7" style="fill:rgb(36, 134, 142)">sitting</text>
+<text transform="translate(78,169)" font-size="7" style="fill:rgb(42, 176, 127)">make</text>
+<text transform="translate(340,112)" font-size="7" style="fill:rgb(33, 165, 133)">reach</text>
+<text transform="translate(187,32)" font-size="6" style="fill:rgb(53, 183, 121)">sink</text>
+<text transform="translate(324,159)" font-size="6" style="fill:rgb(45, 178, 125)">wait</text>
+<text transform="translate(363,45)" font-size="6" style="fill:rgb(49, 102, 142)">find</text>
+<text transform="translate(115,72)" font-size="6" style="fill:rgb(53, 183, 121)">walking</text>
+<text transform="translate(178,17)" font-size="6" style="fill:rgb(68, 59, 132)">counter</text>
+<text transform="translate(21,184)" font-size="6" style="fill:rgb(61, 188, 116)">drop</text>
+<text transform="translate(208,77)" font-size="6" style="fill:rgb(253, 231, 37)">stop</text>
+<text transform="translate(63,43)" font-size="6" style="fill:rgb(31, 150, 139)">begin</text>
+<text transform="translate(39,149)" font-size="6" style="fill:rgb(59, 82, 139)">return</text>
+<text transform="translate(74,71)" font-size="6" style="fill:rgb(72, 23, 105)">holding</text>
+<text transform="translate(276,18)" font-size="6" style="fill:rgb(42, 176, 127)">cleaned</text>
+<text transform="translate(281,8)" font-size="6" style="fill:rgb(205, 225, 29)">Throw</text>
+<text transform="translate(276,65)" font-size="6" style="fill:rgb(70, 8, 92)">Hold</text>
+<text transform="translate(51,9)" font-size="6" style="fill:rgb(129, 211, 77)">microwave</text>
+<text transform="translate(168,9)" font-size="6" style="fill:rgb(68, 1, 84)">Clean</text>
+<text transform="translate(394,168) rotate(-90)" font-size="6" style="fill:rgb(88, 199, 101)">turning</text>
+<text transform="translate(317,125)" font-size="6" style="fill:rgb(68, 58, 131)">Putting</text>
+<text transform="translate(330,40) rotate(-90)" font-size="6" style="fill:rgb(31, 160, 136)">cooked</text>
+<text transform="translate(258,135)" font-size="6" style="fill:rgb(64, 189, 114)">approach</text>
+<text transform="translate(152,17)" font-size="6" style="fill:rgb(40, 124, 142)">Use</text>
+<text transform="translate(230,84)" font-size="6" style="fill:rgb(202, 225, 31)">fill</text>
+<text transform="translate(285,100)" font-size="6" style="fill:rgb(70, 8, 92)">containing</text>
+<text transform="translate(150,123)" font-size="6" style="fill:rgb(39, 126, 142)">frying</text>
+<text transform="translate(130,63)" font-size="6" style="fill:rgb(59, 81, 139)">sliced</text>
+<text transform="translate(2,129)" font-size="6" style="fill:rgb(72, 32, 113)">standing</text>
+<text transform="translate(110,67) rotate(-90)" font-size="6" style="fill:rgb(46, 111, 142)">Warm</text>
+<text transform="translate(352,193)" font-size="6" style="fill:rgb(41, 121, 142)">let</text>
+<text transform="translate(3,190)" font-size="6" style="fill:rgb(31, 150, 139)">bottle</text>
+<text transform="translate(91,14)" font-size="6" style="fill:rgb(64, 70, 136)">rinsed</text>
+<text transform="translate(87,116)" font-size="6" style="fill:rgb(168, 219, 52)">washed</text>
+<text transform="translate(90,176)" font-size="6" style="fill:rgb(36, 170, 131)">locate</text>
+<text transform="translate(100,150) rotate(-90)" font-size="6" style="fill:rgb(241, 229, 29)">cooled</text>
+<text transform="translate(360,129)" font-size="6" style="fill:rgb(117, 208, 84)">hanging</text>
+<text transform="translate(210,34)" font-size="6" style="fill:rgb(31, 161, 135)">see</text>
+<text transform="translate(311,110)" font-size="6" style="fill:rgb(78, 195, 107)">stove</text>
+<text transform="translate(168,175)" font-size="6" style="fill:rgb(68, 1, 84)">Inspect</text>
+<text transform="translate(361,11)" font-size="6" style="fill:rgb(178, 221, 45)">closing</text>
+<text transform="translate(127,191)" font-size="6" style="fill:rgb(78, 195, 107)">microwaved</text>
+<text transform="translate(124,152)" font-size="6" style="fill:rgb(38, 173, 129)">veer</text>
+<text transform="translate(27,62)" font-size="6" style="fill:rgb(82, 197, 105)">located</text>
+<text transform="translate(246,50) rotate(-90)" font-size="6" style="fill:rgb(32, 146, 140)">re</text>
+<text transform="translate(361,140)" font-size="6" style="fill:rgb(38, 130, 142)">using</text>
+<text transform="translate(292,106)" font-size="6" style="fill:rgb(71, 42, 122)">pull</text>
+<text transform="translate(140,125) rotate(-90)" font-size="6" style="fill:rgb(41, 123, 142)">proceed</text>
+<text transform="translate(288,48)" font-size="6" style="fill:rgb(63, 71, 136)">spray</text>
+<text transform="translate(343,52)" font-size="6" style="fill:rgb(31, 161, 135)">continue</text>
+<text transform="translate(73,157)" font-size="6" style="fill:rgb(253, 231, 37)">spoon</text>
+<text transform="translate(307,9)" font-size="6" style="fill:rgb(38, 130, 142)">removing</text>
+<text transform="translate(66,184)" font-size="6" style="fill:rgb(72, 35, 116)">start</text>
+<text transform="translate(228,186)" font-size="6" style="fill:rgb(181, 222, 43)">handled</text>
+<text transform="translate(17,158)" font-size="6" style="fill:rgb(55, 91, 141)">taking</text>
+<text transform="translate(221,129)" font-size="6" style="fill:rgb(35, 138, 141)">carrying</text>
+<text transform="translate(62,105)" font-size="6" style="fill:rgb(134, 213, 73)">done</text>
+<text transform="translate(20,12)" font-size="6" style="fill:rgb(66, 65, 134)">Moving</text>
+<text transform="translate(166,30)" font-size="6" style="fill:rgb(54, 93, 141)">got</text>
+<text transform="translate(372,58)" font-size="6" style="fill:rgb(71, 19, 101)">Stay</text>
+<text transform="translate(77,52)" font-size="6" style="fill:rgb(210, 226, 27)">drain</text>
+<text transform="translate(313,91)" font-size="6" style="fill:rgb(70, 48, 126)">run</text>
+<text transform="translate(57,170)" font-size="6" style="fill:rgb(53, 183, 121)">lid</text>
+<text transform="translate(24,196)" font-size="6" style="fill:rgb(72, 26, 108)">retrieve</text>
+<text transform="translate(52,34)" font-size="6" style="fill:rgb(44, 113, 142)">watch</text>
+</svg>
