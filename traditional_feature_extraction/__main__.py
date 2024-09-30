@@ -103,7 +103,7 @@ if __name__ == "__main__":
             get_word_cloud(resulting_fp + "_results.csv", column="verbs", bigrams=False)
         if reporting_kwargs.get("run_noun_cloud"):
             get_word_cloud(resulting_fp + "_results.csv", column="nouns", bigrams=False)
-        
+
         outputs = []
         if reporting_kwargs.get("run_rouge_score"):
             outputs.append(calc_rouge(resulting_fp + "_results.csv"))
@@ -113,7 +113,6 @@ if __name__ == "__main__":
             outputs.append(calc_bertscore(resulting_fp + "_results.csv"))
         if reporting_kwargs.get("run_levenshtein_distance"):
             outputs.append(calc_lev(resulting_fp + "_results.csv"))
-
 
         with open(
             resulting_fp + "_text_similarity_report.txt",

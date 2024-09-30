@@ -27,19 +27,20 @@ def get_bleu(query_sentence: str, reference_sentences: list, bleu_fn) -> tuple:
             break
         except ZeroDivisionError as e:
             print(e)
-    
+
     return bleu_score
+
 
 def sample_and_compute_bleu(references: list, bleu_fn, n_samples: int) -> list:
     """Helper function to sample and compute ROUGE scores."""
     scores = []
     for _ in range(n_samples):
         query = random.choice(references)
-        
         reference_sample = [random.choice(references)]
         bleu_score = get_bleu(query, reference_sample, bleu_fn)
         scores.append(bleu_score)
     return scores
+
 
 def summary_bleu(fp: str, nl_column="nl_instructions", n_samples=1000, num_workers=100):
     # Load the rouge evaluation function
@@ -64,7 +65,7 @@ def summary_bleu(fp: str, nl_column="nl_instructions", n_samples=1000, num_worke
     bleu_scores = []
     for future in futures:
         bleu_scores.extend(future.result())
-    
+
     # Calculate average BLEU scores
     avg_bleu = np.mean(bleu_scores)
 
@@ -75,7 +76,7 @@ def get_rouge(query_sentence: str, reference_sentences: list, rouge_fn) -> tuple
     """Compute ROUGE scores for a query and references."""
     while True:
         try:
-            rouge_L_score = rouge_fn.compute(
+            rouge_l_score = rouge_fn.compute(
                 predictions=[query_sentence], references=reference_sentences
             )["rougeL"]
             rouge_1_score = rouge_fn.compute(
@@ -84,21 +85,25 @@ def get_rouge(query_sentence: str, reference_sentences: list, rouge_fn) -> tuple
             break
         except ZeroDivisionError as e:
             print(e)
-    
-    return rouge_L_score, rouge_1_score
+
+    return rouge_l_score, rouge_1_score
+
 
 def sample_and_compute_rouge(references: list, rouge_fn, n_samples: int) -> list:
     """Helper function to sample and compute ROUGE scores."""
     scores = []
     for _ in range(n_samples):
         query = random.choice(references)
-        
+
         reference_sample = [random.choice(references)]
         rouge_l, rouge_1 = get_rouge(query, reference_sample, rouge_fn)
         scores.append((rouge_l, rouge_1))
     return scores
 
-def summary_rouge(fp: str, nl_column="nl_instructions", n_samples=1000, num_workers=100):
+
+def summary_rouge(
+    fp: str, nl_column="nl_instructions", n_samples=1000, num_workers=100
+):
     # Load the rouge evaluation function
     rouge_fn = evaluate.load("rouge")
 
@@ -122,16 +127,19 @@ def summary_rouge(fp: str, nl_column="nl_instructions", n_samples=1000, num_work
     for future in futures:
         all_scores.extend(future.result())
     # Split the results into rouge_L_scores and rouge_1_scores
-    rouge_L_scores, rouge_1_scores = zip(*all_scores)
+    rouge_l_scores, rouge_1_scores = zip(*all_scores)
 
     # Calculate average ROUGE scores
-    avg_rouge_l = np.mean(rouge_L_scores)
+    avg_rouge_l = np.mean(rouge_l_scores)
     avg_rouge_1 = np.mean(rouge_1_scores)
 
     return avg_rouge_l, avg_rouge_1
 
 
-def get_levenshtein(query_sentence: str, reference_sentences: list,) -> tuple:
+def get_levenshtein(
+    query_sentence: str,
+    reference_sentences: list,
+) -> tuple:
     """Compute Lev Distances for a query and references."""
     while True:
         try:
@@ -139,8 +147,9 @@ def get_levenshtein(query_sentence: str, reference_sentences: list,) -> tuple:
             break
         except ZeroDivisionError as e:
             print(e)
-    
+
     return lev_dist
+
 
 def sample_and_compute_levscore(references: list, n_samples: int) -> list:
     """Helper function to sample and compute Levscores."""
@@ -152,7 +161,10 @@ def sample_and_compute_levscore(references: list, n_samples: int) -> list:
         scores.append(lev_dist)
     return scores
 
-def summary_levenshtein(fp: str, nl_column="nl_instructions", n_samples=1000, num_workers=100):
+
+def summary_levenshtein(
+    fp: str, nl_column="nl_instructions", n_samples=1000, num_workers=100
+):
     # Load the CSV file and extract the references
     df = pd.read_csv(fp)
     references = list(df[nl_column])
@@ -172,16 +184,21 @@ def summary_levenshtein(fp: str, nl_column="nl_instructions", n_samples=1000, nu
     lev_scores = []
     for future in futures:
         lev_scores.extend(future.result())
-    
+
     # Calculate average BERTscores
     avg_levscore = np.mean(lev_scores)
 
     return avg_levscore
 
 
-
 # Function to compute BERTscore
-def get_bertscore(query_sentence: str, reference_sentences: list, bertscore_fn, device: str, model_type: str) -> dict:
+def get_bertscore(
+    query_sentence: str,
+    reference_sentences: list,
+    bertscore_fn,
+    device: str,
+    model_type: str,
+) -> dict:
     """Compute BERTscores for a query and references."""
     while True:
         try:
@@ -189,17 +206,20 @@ def get_bertscore(query_sentence: str, reference_sentences: list, bertscore_fn, 
             bert_score = bertscore_fn.compute(
                 predictions=[query_sentence],
                 references=reference_sentences,
-                model_type=model_type,  # Specify the model type (e.g., deberta-xlarge-mnli)
-                device=device  # Specify the device (CPU or GPU)
+                model_type=model_type,
+                device=device,
             )
             break
         except ZeroDivisionError as e:
             print(f"Error computing BERTscore: {e}")
-    
+
     return bert_score
 
+
 # Helper function to sample and compute BERTscore
-def sample_and_compute_bertscore(references: list, n_samples: int, device: str, model_type: str) -> list:
+def sample_and_compute_bertscore(
+    references: list, n_samples: int, device: str, model_type: str
+) -> list:
     """Sample random queries and compute their BERTscores using GPU or CPU."""
     # Load the BERTscore evaluation function (no device here)
     bertscore_fn = evaluate.load("bertscore")
@@ -209,7 +229,7 @@ def sample_and_compute_bertscore(references: list, n_samples: int, device: str, 
         # Sample a query and a reference sentence
         query = random.choice(references)
         reference_sample = [random.choice(references)]
-        
+
         # Compute BERTscore for the sampled query and reference
         while True:
             try:
@@ -218,40 +238,40 @@ def sample_and_compute_bertscore(references: list, n_samples: int, device: str, 
                     predictions=[query],
                     references=reference_sample,
                     model_type=model_type,  # Specify the model type
-                    device=device  # Specify the device (CPU or GPU)
+                    device=device,  # Specify the device (CPU or GPU)
                 )
                 break
             except ZeroDivisionError as e:
                 print(f"Error computing BERTscore: {e}")
         scores.append(bert_score)
-    
+
     return scores
 
+
 # Multiprocessing function wrapper
-def worker_process(references: list, n_samples: int, device: str, model_type: str, result_queue: mp.Queue):
+def worker_process(
+    references: list,
+    n_samples: int,
+    device: str,
+    model_type: str,
+    result_queue: mp.Queue,
+):
     """Worker process function to compute BERTscores and store results in a queue."""
     result = sample_and_compute_bertscore(references, n_samples, device, model_type)
     result_queue.put(result)
 
-# Main function to compute average BERTscore across samples using multiprocessing and GPU
-def summary_bertscore(fp: str, nl_column="nl_instructions", n_samples=1000, num_workers=4, model_type="microsoft/deberta-xlarge-mnli") -> float:
-    """
-    Compute the average BERTscore across samples from a CSV file using multiprocessing and GPU.
 
-    Args:
-        fp (str): Filepath to the CSV file.
-        nl_column (str): Column name for natural language instructions.
-        n_samples (int): Number of samples to compute BERTscore for.
-        num_workers (int): Number of parallel workers.
-        model_type (str): Model type for BERTScore (e.g., "microsoft/deberta-xlarge-mnli").
-
-    Returns:
-        float: The average BERTscore (F1) across samples.
-    """
+def summary_bertscore(
+    fp: str,
+    nl_column="nl_instructions",
+    n_samples=1000,
+    num_workers=4,
+    model_type="microsoft/deberta-xlarge-mnli",
+) -> float:
     # Load the CSV file and extract the references
     df = pd.read_csv(fp)
     references = list(df[nl_column])
-    random.shuffle(references)  # Shuffle references to add randomness
+    random.shuffle(references)
 
     # Split the workload into batches for parallel processing
     batch_size = n_samples // num_workers
@@ -260,7 +280,7 @@ def summary_bertscore(fp: str, nl_column="nl_instructions", n_samples=1000, num_
     result_queue = mp.Queue()
 
     # Determine device: Use GPU if available, otherwise CPU
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Using device: {device}")
 
     # Create a list to hold worker processes
@@ -268,7 +288,10 @@ def summary_bertscore(fp: str, nl_column="nl_instructions", n_samples=1000, num_
 
     # Start worker processes
     for _ in range(num_workers):
-        process = mp.Process(target=worker_process, args=(references, batch_size, device, model_type, result_queue))
+        process = mp.Process(
+            target=worker_process,
+            args=(references, batch_size, device, model_type, result_queue),
+        )
         processes.append(process)
         process.start()
 
@@ -282,6 +305,6 @@ def summary_bertscore(fp: str, nl_column="nl_instructions", n_samples=1000, num_
         process.join()
 
     # Calculate the average BERTscore (F1 score)
-    avg_bertscore = np.mean([score['f1'][0] for score in bert_scores])
+    avg_bertscore = np.mean([score["f1"][0] for score in bert_scores])
 
     return avg_bertscore
