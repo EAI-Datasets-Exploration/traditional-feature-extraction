@@ -22,9 +22,10 @@ from traditional_feature_extraction.data_viz.utils import (
     get_word_cloud,
 )
 from traditional_feature_extraction.data_viz.similarity_report import (
+    calc_bertscore,
     calc_bleu,
     calc_rouge,
-    # calc_lev,
+    calc_lev,
 )
 
 
@@ -90,6 +91,7 @@ if __name__ == "__main__":
         "run_verb_cloud": config.getboolean("reporting", "run_verb_cloud"),
         "run_noun_cloud": config.getboolean("reporting", "run_noun_cloud"),
         "run_rouge_score": config.getboolean("reporting", "run_rouge_score"),
+        "run_bert_score": config.getboolean("reporting", "run_bert_score"),
         "run_bleu_score": config.getboolean("reporting", "run_bleu_score"),
         "run_levenshtein_distance": config.getboolean(
             "reporting", "run_levenshtein_distance"
@@ -107,8 +109,11 @@ if __name__ == "__main__":
             outputs.append(calc_rouge(resulting_fp + "_results.csv"))
         if reporting_kwargs.get("run_bleu_score"):
             outputs.append(calc_bleu(resulting_fp + "_results.csv"))
-        # if reporting_kwargs.get("run_levenshtein_distance"):
-        #     outputs.append(calc_lev(resulting_fp + "_results.csv"))
+        if reporting_kwargs.get("run_bert_score"):
+            outputs.append(calc_bertscore(resulting_fp + "_results.csv"))
+        if reporting_kwargs.get("run_levenshtein_distance"):
+            outputs.append(calc_lev(resulting_fp + "_results.csv"))
+
 
         with open(
             resulting_fp + "_text_similarity_report.txt",

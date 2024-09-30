@@ -8,6 +8,8 @@ how similar natural language instructions in EAI VLN datasets are to one another
 This approach was first proposed by Zhang et al. [https://arxiv.org/pdf/2005.03086]
 """
 import evaluate
+import torch
+import multiprocessing as mp
 from Levenshtein import distance as levenshtein_distance
 import pandas as pd
 import numpy as np
@@ -63,7 +65,7 @@ def summary_bleu(fp: str, nl_column="nl_instructions", n_samples=1000, num_worke
     for future in futures:
         bleu_scores.extend(future.result())
     
-    # Calculate average ROUGE scores
+    # Calculate average BLEU scores
     avg_bleu = np.mean(bleu_scores)
 
     return avg_bleu
@@ -129,39 +131,157 @@ def summary_rouge(fp: str, nl_column="nl_instructions", n_samples=1000, num_work
     return avg_rouge_l, avg_rouge_1
 
 
-# def summary_bertscore(fp: str, nl_column="nl_instructions", n_samples=1000):
-#     bertscore_fn = evaluate.load("bertscore")
+def get_levenshtein(query_sentence: str, reference_sentences: list,) -> tuple:
+    """Compute Lev Distances for a query and references."""
+    while True:
+        try:
+            lev_dist = levenshtein_distance(query_sentence, reference_sentences)
+            break
+        except ZeroDivisionError as e:
+            print(e)
+    
+    return lev_dist
 
-#     df = pd.read_csv(fp)
-#     references = list(df[nl_column])
+def sample_and_compute_levscore(references: list, n_samples: int) -> list:
+    """Helper function to sample and compute Levscores."""
+    scores = []
+    for _ in range(n_samples):
+        query = random.choice(references)
+        reference_sample = random.choice(references)
+        lev_dist = get_levenshtein(query, reference_sample)
+        scores.append(lev_dist)
+    return scores
 
-#     def get_bertscore(query_sentence: str, reference_sentences: list):
-#         try:
-#             bertscore = bertscore_fn.compute(
-#                 predictions=[query_sentence],
-#                 references=reference_sentences,
-#                 model_type="distilbert-base-uncased",
-#             )["f1"][0]
-#         except ZeroDivisionError as e:
-#             print(e)
+def summary_levenshtein(fp: str, nl_column="nl_instructions", n_samples=1000, num_workers=100):
+    # Load the CSV file and extract the references
+    df = pd.read_csv(fp)
+    references = list(df[nl_column])
+    random.shuffle(references)
 
-#         return bertscore
+    # Split the workload into batches for parallel processing
+    batch_size = n_samples // num_workers
 
-#     bertscores = []
-#     for _ in range(n_samples):
-#         query = random.choice(references)
-#         references = [random.choice(references)]
-#         bertscores.append(get_bertscore(query, references))
-#     return sum(bertscores) / len(bertscores)
+    # Parallel processing of ROUGE score computation
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        futures = [
+            executor.submit(sample_and_compute_levscore, references, batch_size)
+            for _ in range(num_workers)
+        ]
+
+    # Gather the results from the futures
+    lev_scores = []
+    for future in futures:
+        lev_scores.extend(future.result())
+    
+    # Calculate average BERTscores
+    avg_levscore = np.mean(lev_scores)
+
+    return avg_levscore
 
 
-# def summary_levenshtein(fp: str, nl_column="nl_instructions", n_samples=1000):
-#     df = pd.read_csv(fp)
-#     references = list(df[nl_column])
 
-#     levenshtein_dists = []
-#     for _ in range(n_samples):
-#         query = random.choice(references)
-#         references = random.choice(references)
-#         levenshtein_dists.append(levenshtein_distance(query, references))
-#     return sum(levenshtein_dists) / len(levenshtein_dists)
+# Function to compute BERTscore
+def get_bertscore(query_sentence: str, reference_sentences: list, bertscore_fn, device: str, model_type: str) -> dict:
+    """Compute BERTscores for a query and references."""
+    while True:
+        try:
+            # Compute BERTscore using the specified function
+            bert_score = bertscore_fn.compute(
+                predictions=[query_sentence],
+                references=reference_sentences,
+                model_type=model_type,  # Specify the model type (e.g., deberta-xlarge-mnli)
+                device=device  # Specify the device (CPU or GPU)
+            )
+            break
+        except ZeroDivisionError as e:
+            print(f"Error computing BERTscore: {e}")
+    
+    return bert_score
+
+# Helper function to sample and compute BERTscore
+def sample_and_compute_bertscore(references: list, n_samples: int, device: str, model_type: str) -> list:
+    """Sample random queries and compute their BERTscores using GPU or CPU."""
+    # Load the BERTscore evaluation function (no device here)
+    bertscore_fn = evaluate.load("bertscore")
+
+    scores = []
+    for _ in range(n_samples):
+        # Sample a query and a reference sentence
+        query = random.choice(references)
+        reference_sample = [random.choice(references)]
+        
+        # Compute BERTscore for the sampled query and reference
+        while True:
+            try:
+                # Compute BERTscore using the specified function
+                bert_score = bertscore_fn.compute(
+                    predictions=[query],
+                    references=reference_sample,
+                    model_type=model_type,  # Specify the model type
+                    device=device  # Specify the device (CPU or GPU)
+                )
+                break
+            except ZeroDivisionError as e:
+                print(f"Error computing BERTscore: {e}")
+        scores.append(bert_score)
+    
+    return scores
+
+# Multiprocessing function wrapper
+def worker_process(references: list, n_samples: int, device: str, model_type: str, result_queue: mp.Queue):
+    """Worker process function to compute BERTscores and store results in a queue."""
+    result = sample_and_compute_bertscore(references, n_samples, device, model_type)
+    result_queue.put(result)
+
+# Main function to compute average BERTscore across samples using multiprocessing and GPU
+def summary_bertscore(fp: str, nl_column="nl_instructions", n_samples=1000, num_workers=4, model_type="microsoft/deberta-xlarge-mnli") -> float:
+    """
+    Compute the average BERTscore across samples from a CSV file using multiprocessing and GPU.
+
+    Args:
+        fp (str): Filepath to the CSV file.
+        nl_column (str): Column name for natural language instructions.
+        n_samples (int): Number of samples to compute BERTscore for.
+        num_workers (int): Number of parallel workers.
+        model_type (str): Model type for BERTScore (e.g., "microsoft/deberta-xlarge-mnli").
+
+    Returns:
+        float: The average BERTscore (F1) across samples.
+    """
+    # Load the CSV file and extract the references
+    df = pd.read_csv(fp)
+    references = list(df[nl_column])
+    random.shuffle(references)  # Shuffle references to add randomness
+
+    # Split the workload into batches for parallel processing
+    batch_size = n_samples // num_workers
+
+    # Create a queue to collect results from workers
+    result_queue = mp.Queue()
+
+    # Determine device: Use GPU if available, otherwise CPU
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print(f"Using device: {device}")
+
+    # Create a list to hold worker processes
+    processes = []
+
+    # Start worker processes
+    for _ in range(num_workers):
+        process = mp.Process(target=worker_process, args=(references, batch_size, device, model_type, result_queue))
+        processes.append(process)
+        process.start()
+
+    # Collect results from the queue
+    bert_scores = []
+    for _ in range(num_workers):
+        bert_scores.extend(result_queue.get())
+
+    # Ensure all worker processes have finished
+    for process in processes:
+        process.join()
+
+    # Calculate the average BERTscore (F1 score)
+    avg_bertscore = np.mean([score['f1'][0] for score in bert_scores])
+
+    return avg_bertscore
