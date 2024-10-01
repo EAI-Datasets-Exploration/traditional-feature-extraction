@@ -14,6 +14,7 @@ from Levenshtein import distance as levenshtein_distance
 import pandas as pd
 import numpy as np
 import random
+from nltk import Tree
 from concurrent.futures import ProcessPoolExecutor
 
 
@@ -308,3 +309,92 @@ def summary_bertscore(
     avg_bertscore = np.mean([score["f1"][0] for score in bert_scores])
 
     return avg_bertscore
+
+
+def decompose_subtrees(tree):
+    """
+    Recursively decomposes a tree into all possible subtrees.
+    :param tree: NLTK Tree object
+    :return: List of subtrees (each subtree is represented as a string)
+    """
+    subtrees = []
+    
+    # If the tree has children, recursively decompose
+    if isinstance(tree, Tree):
+        # Add the current tree as a string to the list
+        subtrees.append(tree.pformat())  # Use pformat() to get a string representation
+        
+        # Recursively add the subtrees of all children
+        for child in tree:
+            subtrees.extend(decompose_subtrees(child))
+    
+    return subtrees
+
+# Function to compute the tree kernel distance between query and reference sentences
+def get_treekernel(
+    query_sentence: str,
+    reference_sentence: str,
+) -> float:
+    """Compute tree kernel distance for a query and a reference."""
+    try:
+        # Parse query and reference sentences into trees
+        q_tree = Tree.fromstring(query_sentence)
+        q_subtrees = decompose_subtrees(q_tree)
+
+        ref_tree = Tree.fromstring(reference_sentence)
+        ref_subtrees = decompose_subtrees(ref_tree)
+
+        # Calculate total subtrees and common subtrees
+        total_num_subtrees = len(q_subtrees) + len(ref_subtrees)
+        common_subtrees = len(set(q_subtrees).intersection(set(ref_subtrees)))
+
+        # Compute tree kernel distance as a percentage
+        tk_dist = 100 * common_subtrees / total_num_subtrees if total_num_subtrees > 0 else 0
+    except ZeroDivisionError as e:
+        print(f"Error: {e}")
+        tk_dist = 0.0  # Return 0 if there are no subtrees (edge case)
+    
+    return tk_dist
+
+# Function to sample and compute tree kernel scores
+def sample_and_compute_tk(references: list, n_samples: int) -> list:
+    """Helper function to sample and compute tree kernel scores."""
+    scores = []
+    for _ in range(n_samples):
+        # Randomly select a query and a reference sentence
+        query = random.choice(references)
+        reference_sample = random.choice(references)
+        tk_dist = get_treekernel(query, reference_sample)
+        scores.append(tk_dist)
+    return scores
+
+# Function to summarize the tree kernel computation in parallel
+def summary_treekernel(
+    fp: str, constit_column="constituency_parse_tree", n_samples=1000, num_workers=100
+):
+    """Compute tree kernel distance summary using parallel processing."""
+    # Load the CSV file and extract the references
+    df = pd.read_csv(fp)
+    print(df.info())
+    references = list(df[constit_column])
+    random.shuffle(references)
+
+    # Split the workload into batches for parallel processing
+    batch_size = n_samples // num_workers
+
+    # Parallel processing of tree kernel computation
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        futures = [
+            executor.submit(sample_and_compute_tk, references, batch_size)
+            for _ in range(num_workers)
+        ]
+
+    # Gather the results from the futures
+    tk_scores = []
+    for future in futures:
+        tk_scores.extend(future.result())
+
+    # Calculate average tree kernel scores
+    avg_tk = np.mean(tk_scores)
+
+    return avg_tk

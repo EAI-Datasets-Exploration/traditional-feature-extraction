@@ -171,7 +171,8 @@ def parse_text_on_gpu(gpu_id, texts, num_models_per_gpu=1):
         )
         for text in model_texts:
             doc = nlp(text)
-            results.append(doc)
+            processed_constituencies = [sentence.constituency for sentence in doc.sentences]
+            results.append(processed_constituencies)
 
     return results
 
@@ -200,13 +201,9 @@ def get_constituency_parse_tree(
 
     results = [item for sublist in results for item in sublist]
 
-    # Extract constituency trees
-    constituency_trees = [
-        sentence.constituency for doc in results for sentence in doc.sentences
-    ]
-
-    # Update the DataFrame with the results
-    df[parse_tree_column] = constituency_trees
+    # Update the DataFrame with the extracted constituency trees
+    df[parse_tree_column] = results
+    df = df.explode(parse_tree_column).reset_index(drop=True)
     return df
 
 

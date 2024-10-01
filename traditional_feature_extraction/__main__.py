@@ -26,6 +26,7 @@ from traditional_feature_extraction.data_viz.similarity_report import (
     calc_bleu,
     calc_rouge,
     calc_lev,
+    calc_treekernel,
 )
 
 
@@ -96,6 +97,7 @@ if __name__ == "__main__":
         "run_levenshtein_distance": config.getboolean(
             "reporting", "run_levenshtein_distance"
         ),
+        "run_treekernels": config.getboolean("reporting", "run_treekernels"),
     }
 
     if any(reporting_kwargs.values()):
@@ -113,7 +115,8 @@ if __name__ == "__main__":
             outputs.append(calc_bertscore(resulting_fp + "_results.csv"))
         if reporting_kwargs.get("run_levenshtein_distance"):
             outputs.append(calc_lev(resulting_fp + "_results.csv"))
-
+        if reporting_kwargs.get("run_treekernels"):
+            outputs.append(calc_treekernel(resulting_fp + "_results.csv"))
         with open(
             resulting_fp + "_text_similarity_report.txt",
             "w+",

@@ -1,5 +1,1 @@
-Average rouge-l pairwise scores: 0.3002. Stddev: 0.0049.
-Average rouge-1 pairwise scores: 0.3101. Stddev: 0.0049.
-Average bleu pairwise scores: 0.0215. Stddev: 0.0031.
-Average bertscore pairwise scores: 0.6844. Stddev: 0.0022.
-Average levenshtein pairwise distances: 27.4330. Stddev: 0.2852.
+Average tree kernel pairwise distances: 7.6624. Stddev: 0.0152.

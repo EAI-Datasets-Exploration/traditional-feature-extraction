@@ -8,6 +8,7 @@ from traditional_feature_extraction.similarity_measures.nlg_metrics import (
     summary_rouge,
     summary_levenshtein,
     summary_bertscore,
+    summary_treekernel,
 )
 
 
@@ -96,4 +97,24 @@ def calc_bertscore(fp, n_trials=3, n_samples=1000):
         f"Stddev: {stddev_bertscore:.4f}."
     )
 
+    return output
+
+
+def calc_treekernel(fp, n_trials=3, n_samples=1000):
+    treekernel_pairwise_list = []
+    for _ in range(n_trials):
+        treekernel_pairwise_list.append(
+            summary_treekernel(
+                fp=fp,
+                n_samples=n_samples,
+            )
+        )
+    avg_tk = np.average(treekernel_pairwise_list)
+    stddev_tk = np.std(treekernel_pairwise_list)
+
+    # Adjust the formatting to show the values with 4 decimal places
+    output = (
+        f"Average tree kernel pairwise distances: {avg_tk:.4f}. "
+        f"Stddev: {stddev_tk:.4f}."
+    )
     return output
