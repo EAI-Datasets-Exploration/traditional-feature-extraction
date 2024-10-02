@@ -9,6 +9,7 @@ from traditional_feature_extraction.similarity_measures.nlg_metrics import (
     summary_levenshtein,
     summary_bertscore,
     summary_treekernel,
+    summary_jaccard,
 )
 
 
@@ -116,5 +117,25 @@ def calc_treekernel(fp, n_trials=3, n_samples=1000):
     output = (
         f"Average tree kernel pairwise distances: {avg_tk:.4f}. "
         f"Stddev: {stddev_tk:.4f}."
+    )
+    return output
+
+
+def calc_jaccard(fp, n_trials=3, n_samples=1000):
+    jaccard_pairwise_list = []
+    for _ in range(n_trials):
+        jaccard_pairwise_list.append(
+            summary_jaccard(
+                fp=fp,
+                n_samples=n_samples,
+            )
+        )
+    avg_jaccard = np.average(jaccard_pairwise_list)
+    stddev_jaccard = np.std(jaccard_pairwise_list)
+
+    # Adjust the formatting to show the values with 4 decimal places
+    output = (
+        f"Average Jaccard pairwise distances: {avg_jaccard:.4f}. "
+        f"Stddev: {stddev_jaccard:.4f}."
     )
     return output

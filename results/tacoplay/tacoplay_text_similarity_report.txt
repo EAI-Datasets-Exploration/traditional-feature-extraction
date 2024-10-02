@@ -1,2 +1,1 @@
-Number of unique commands in dataset: 403
-Number of unique unigrams in dataset: 74
+Average Jaccard pairwise distances: 0.1429. Stddev: 0.0000.

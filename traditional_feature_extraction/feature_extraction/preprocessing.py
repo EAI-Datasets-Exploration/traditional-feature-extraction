@@ -11,6 +11,7 @@ import pandas as pd
 import string
 import re
 
+
 def clean_and_standardize_text(df: pd.DataFrame, nl_column: str) -> pd.DataFrame:
     df_copy = df.copy()  # Make a copy of the dataframe to avoid modifying the original
 
@@ -36,16 +37,19 @@ def clean_and_standardize_text(df: pd.DataFrame, nl_column: str) -> pd.DataFrame
             return [pd.NA]
 
         # Split by period, question mark, or exclamation mark followed by space
-        sentences = re.split(r'(?<=[.!?])\s+', text)
-        
+        sentences = re.split(r"(?<=[.!?])\s+", text)
+
         # Clean each sentence individually
         sentences = [clean_text(sentence) for sentence in sentences if sentence]
 
         # Filter out any sentences that are pd.NA or empty strings
-        sentences = [sentence for sentence in sentences if not pd.isna(sentence) and sentence != '']
+        sentences = [
+            sentence
+            for sentence in sentences
+            if not pd.isna(sentence) and sentence != ""
+        ]
 
         return sentences if sentences else [pd.NA]
-
 
     # Apply the split_sentences function to the specified column
     df_copy[nl_column] = df_copy[nl_column].apply(split_sentences)
@@ -60,4 +64,3 @@ def clean_and_standardize_text(df: pd.DataFrame, nl_column: str) -> pd.DataFrame
     df_copy = df_copy.dropna(subset=[nl_column])
 
     return df_copy
-

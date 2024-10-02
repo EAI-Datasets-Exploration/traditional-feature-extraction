@@ -29,6 +29,7 @@ from traditional_feature_extraction.data_viz.similarity_report import (
     calc_rouge,
     calc_lev,
     calc_treekernel,
+    calc_jaccard,
 )
 
 
@@ -93,7 +94,9 @@ if __name__ == "__main__":
     reporting_kwargs = {
         "run_unique_commands": config.getboolean("reporting", "run_unique_commands"),
         "run_unique_unigrams": config.getboolean("reporting", "run_unique_unigrams"),
-
+        "run_jaccard_similarity": config.getboolean(
+            "reporting", "run_jaccard_similarity"
+        ),
         "run_verb_cloud": config.getboolean("reporting", "run_verb_cloud"),
         "run_noun_cloud": config.getboolean("reporting", "run_noun_cloud"),
         "run_rouge_score": config.getboolean("reporting", "run_rouge_score"),
@@ -113,9 +116,17 @@ if __name__ == "__main__":
 
         outputs = []
         if reporting_kwargs.get("run_unique_commands"):
-            outputs.append(get_num_unique_commands(resulting_fp + "_results.csv", nl_column="nl_instructions"))
+            outputs.append(
+                get_num_unique_commands(
+                    resulting_fp + "_results.csv", nl_column="nl_instructions"
+                )
+            )
         if reporting_kwargs.get("run_unique_unigrams"):
-            outputs.append(count_unique_unigrams(resulting_fp + "_results.csv", nl_column="nl_instructions"))
+            outputs.append(
+                count_unique_unigrams(
+                    resulting_fp + "_results.csv", nl_column="nl_instructions"
+                )
+            )
         if reporting_kwargs.get("run_rouge_score"):
             outputs.append(calc_rouge(resulting_fp + "_results.csv"))
         if reporting_kwargs.get("run_bleu_score"):
@@ -126,6 +137,8 @@ if __name__ == "__main__":
             outputs.append(calc_lev(resulting_fp + "_results.csv"))
         if reporting_kwargs.get("run_treekernels"):
             outputs.append(calc_treekernel(resulting_fp + "_results.csv"))
+        if reporting_kwargs.get("run_jaccard_similarity"):
+            outputs.append(calc_jaccard(resulting_fp + "_results.csv"))
         with open(
             resulting_fp + "_text_similarity_report.txt",
             "w+",

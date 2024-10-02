@@ -319,17 +319,18 @@ def decompose_subtrees(tree):
     :return: List of subtrees (each subtree is represented as a string)
     """
     subtrees = []
-    
+
     # If the tree has children, recursively decompose
     if isinstance(tree, Tree):
         # Add the current tree as a string to the list
         subtrees.append(tree.pformat())  # Use pformat() to get a string representation
-        
+
         # Recursively add the subtrees of all children
         for child in tree:
             subtrees.extend(decompose_subtrees(child))
-    
+
     return subtrees
+
 
 # Function to compute the tree kernel distance between query and reference sentences
 def get_treekernel(
@@ -353,12 +354,15 @@ def get_treekernel(
         common_subtrees = sum((q_subtree_counts & ref_subtree_counts).values())
 
         # Compute tree kernel distance as a percentage
-        tk_dist = 100 * common_subtrees / total_num_subtrees if total_num_subtrees > 0 else 0
+        tk_dist = (
+            100 * common_subtrees / total_num_subtrees if total_num_subtrees > 0 else 0
+        )
     except ZeroDivisionError as e:
         print(f"Error: {e}")
         tk_dist = 0.0  # Return 0 if there are no subtrees (edge case)
-    
+
     return tk_dist
+
 
 # Function to sample and compute tree kernel scores
 def sample_and_compute_tk(references: list, n_samples: int) -> list:
@@ -371,6 +375,7 @@ def sample_and_compute_tk(references: list, n_samples: int) -> list:
         tk_dist = get_treekernel(query, reference_sample)
         scores.append(tk_dist)
     return scores
+
 
 # Function to summarize the tree kernel computation in parallel
 def summary_treekernel(
@@ -402,3 +407,66 @@ def summary_treekernel(
     avg_tk = np.mean(tk_scores)
 
     return avg_tk
+
+
+def get_jaccard(
+    query_sentence: str,
+    reference_sentence: str,
+) -> float:
+    try:
+        # Parse query and reference sentences into trees
+        q_tokens = set(query_sentence.lower().split())
+        ref_tokens = set(reference_sentence.lower().split())
+
+        intersection = q_tokens.intersection(ref_tokens)
+        union = q_tokens.union(ref_tokens)
+
+        jaccard_score = len(intersection) / len(union)
+
+    except ZeroDivisionError as e:
+        print(f"Error: {e}")
+        jaccard_score = 0.0  # Return 0 if there are no subtrees (edge case)
+
+    return jaccard_score
+
+
+def sample_and_compute_jaccard(references: list, n_samples: int) -> list:
+    scores = []
+    for _ in range(n_samples):
+        # Randomly select a query and a reference sentence
+        query = random.choice(references)
+        reference_sample = random.choice(references)
+        jacc_dist = get_jaccard(query, reference_sample)
+        scores.append(jacc_dist)
+    return scores
+
+
+def summary_jaccard(
+    fp: str, nl_column="nl_instructions", n_samples=1000, num_workers=100
+):
+    """Compute tree kernel distance summary using parallel processing."""
+    # Load the CSV file and extract the references
+    df = pd.read_csv(fp)
+    print(df.info())
+    references = list(df[nl_column])
+    random.shuffle(references)
+
+    # Split the workload into batches for parallel processing
+    batch_size = n_samples // num_workers
+
+    # Parallel processing of tree kernel computation
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        futures = [
+            executor.submit(sample_and_compute_jaccard, references, batch_size)
+            for _ in range(num_workers)
+        ]
+
+    # Gather the results from the futures
+    jaccard_scores = []
+    for future in futures:
+        jaccard_scores.extend(future.result())
+
+    # Calculate average jaccard scores
+    avg_jacc = np.mean(jaccard_scores)
+
+    return avg_jacc
