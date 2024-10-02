@@ -1,1 +1,1 @@
-Average tree kernel pairwise distances: 7.6624. Stddev: 0.0152.
+Average tree kernel pairwise distances: 6.9787. Stddev: 0.1161.

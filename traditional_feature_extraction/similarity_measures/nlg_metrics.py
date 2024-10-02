@@ -7,6 +7,7 @@ how similar natural language instructions in EAI VLN datasets are to one another
 
 This approach was first proposed by Zhang et al. [https://arxiv.org/pdf/2005.03086]
 """
+from collections import Counter
 import evaluate
 import torch
 import multiprocessing as mp
@@ -346,7 +347,10 @@ def get_treekernel(
 
         # Calculate total subtrees and common subtrees
         total_num_subtrees = len(q_subtrees) + len(ref_subtrees)
-        common_subtrees = len(set(q_subtrees).intersection(set(ref_subtrees)))
+
+        q_subtree_counts = Counter(q_subtrees)
+        ref_subtree_counts = Counter(ref_subtrees)
+        common_subtrees = sum((q_subtree_counts & ref_subtree_counts).values())
 
         # Compute tree kernel distance as a percentage
         tk_dist = 100 * common_subtrees / total_num_subtrees if total_num_subtrees > 0 else 0
