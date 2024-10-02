@@ -1,1 +1,2 @@
-Average tree kernel pairwise distances: 5.0901. Stddev: 0.2017.
+Number of unique commands in dataset: 577
+Number of unique unigrams in dataset: 49

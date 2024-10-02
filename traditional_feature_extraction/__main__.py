@@ -15,6 +15,8 @@ from traditional_feature_extraction.feature_extraction.preprocessing import (
     clean_and_standardize_text,
 )
 from traditional_feature_extraction.feature_extraction.utils import (
+    get_num_unique_commands,
+    count_unique_unigrams,
     spacy_processing_parallel,
     get_constituency_parse_tree,
 )
@@ -89,6 +91,9 @@ if __name__ == "__main__":
     ###
 
     reporting_kwargs = {
+        "run_unique_commands": config.getboolean("reporting", "run_unique_commands"),
+        "run_unique_unigrams": config.getboolean("reporting", "run_unique_unigrams"),
+
         "run_verb_cloud": config.getboolean("reporting", "run_verb_cloud"),
         "run_noun_cloud": config.getboolean("reporting", "run_noun_cloud"),
         "run_rouge_score": config.getboolean("reporting", "run_rouge_score"),
@@ -107,6 +112,10 @@ if __name__ == "__main__":
             get_word_cloud(resulting_fp + "_results.csv", column="nouns", bigrams=False)
 
         outputs = []
+        if reporting_kwargs.get("run_unique_commands"):
+            outputs.append(get_num_unique_commands(resulting_fp + "_results.csv", nl_column="nl_instructions"))
+        if reporting_kwargs.get("run_unique_unigrams"):
+            outputs.append(count_unique_unigrams(resulting_fp + "_results.csv", nl_column="nl_instructions"))
         if reporting_kwargs.get("run_rouge_score"):
             outputs.append(calc_rouge(resulting_fp + "_results.csv"))
         if reporting_kwargs.get("run_bleu_score"):

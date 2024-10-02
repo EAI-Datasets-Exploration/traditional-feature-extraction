@@ -18,8 +18,21 @@ def drop_na(df: pd.DataFrame, nl_column: str) -> pd.DataFrame:
     return df[df[nl_column].notnull()]
 
 
-def get_num_unique_values(df: pd.DataFrame, nl_column: str) -> int:
-    return len(df[nl_column].unique())
+def get_num_unique_commands(fp: str,  nl_column: str) -> int:
+    df = pd.read_csv(fp)
+    num_unique = len(df[nl_column].unique())
+    s = f"Number of unique commands in dataset: {num_unique}"
+    return s
+
+def count_unique_unigrams(fp: str, nl_column: str) -> int:
+    df = pd.read_csv(fp)
+    
+    all_text = ' '.join(df[nl_column].astype(str).tolist())    
+    unigrams = all_text.split()  # You can use more sophisticated tokenization if needed    
+    unique_unigrams = set(unigrams)
+    num_unique = len(unique_unigrams)
+    s = f"Number of unique unigrams in dataset: {num_unique}"
+    return s
 
 
 ### SPACY PARALLEL PROCESSING
