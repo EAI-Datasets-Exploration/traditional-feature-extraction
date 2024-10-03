@@ -384,7 +384,6 @@ def summary_treekernel(
     """Compute tree kernel distance summary using parallel processing."""
     # Load the CSV file and extract the references
     df = pd.read_csv(fp)
-    print(df.info())
     references = list(df[constit_column])
     random.shuffle(references)
 
@@ -447,7 +446,6 @@ def summary_jaccard(
     """Compute jaccard distance summary using parallel processing."""
     # Load the CSV file and extract the references
     df = pd.read_csv(fp)
-    print(df.info())
     references = list(df[nl_column])
     random.shuffle(references)
 

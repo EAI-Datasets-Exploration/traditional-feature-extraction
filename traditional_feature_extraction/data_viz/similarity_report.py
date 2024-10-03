@@ -2,6 +2,8 @@
 Generates text files that summarize the text 
 similarity metrics.
 """
+from diversity import compression_ratio, homogenization_score, ngram_diversity_score
+import pandas as pd
 import numpy as np
 from traditional_feature_extraction.similarity_measures.nlg_metrics import (
     summary_bleu,
@@ -137,5 +139,41 @@ def calc_jaccard(fp, n_trials=3, n_samples=1000):
     output = (
         f"Average Jaccard pairwise distances: {avg_jaccard:.4f}. "
         f"Stddev: {stddev_jaccard:.4f}."
+    )
+    return output
+
+
+def calc_compression_rato(fp, nl_column="nl_instructions"):
+    df = pd.read_csv(fp)
+    references = list(df[nl_column])
+
+    cr = compression_ratio(references, 'gzip')
+
+    output = (
+        f"Compression Ratio: {cr:.4f}. "
+    )
+    return output
+
+
+def calc_homogenization(fp, nl_column="nl_instructions", homo_type="rougel"):
+    df = pd.read_csv(fp)
+    references = list(df[nl_column])
+
+    cr = homogenization_score(references, homo_type)
+
+    output = (
+        f"Homogenization Score for {homo_type}: {cr:.4f}. "
+    )
+    return output
+
+
+def calc_ngram_diversity(fp, nl_column="nl_instructions", n=4):
+    df = pd.read_csv(fp)
+    references = list(df[nl_column])
+
+    cr = ngram_diversity_score(references, n)
+
+    output = (
+        f"Ngram Diversity Score for {n}-gram: {cr:.4f}. "
     )
     return output

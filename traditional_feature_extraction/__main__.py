@@ -30,6 +30,9 @@ from traditional_feature_extraction.data_viz.similarity_report import (
     calc_lev,
     calc_treekernel,
     calc_jaccard,
+    calc_compression_rato,
+    calc_homogenization,
+    calc_ngram_diversity,
 )
 
 
@@ -106,6 +109,12 @@ if __name__ == "__main__":
             "reporting", "run_levenshtein_distance"
         ),
         "run_treekernels": config.getboolean("reporting", "run_treekernels"),
+
+        "run_compression_ratio": config.getboolean("reporting", "run_compression_ratio"),
+        "run_homogenization_score": config.getboolean("reporting", "run_homogenization_score"),
+        "run_ngram_diversity_score": config.getboolean("reporting", "run_ngram_diversity_score"),
+        "run_extract_common_patterns": config.getboolean("reporting", "run_extract_common_patterns"),
+
     }
 
     if any(reporting_kwargs.values()):
@@ -139,6 +148,16 @@ if __name__ == "__main__":
             outputs.append(calc_treekernel(resulting_fp + "_results.csv"))
         if reporting_kwargs.get("run_jaccard_similarity"):
             outputs.append(calc_jaccard(resulting_fp + "_results.csv"))
+
+        if reporting_kwargs.get("run_compression_ratio"):
+            outputs.append(calc_compression_rato(resulting_fp + "_results.csv"))
+        if reporting_kwargs.get("run_homogenization_score"):
+            outputs.append(calc_homogenization(resulting_fp + "_results.csv"))
+        if reporting_kwargs.get("run_ngram_diversity_score"):
+                    outputs.append(calc_ngram_diversity(resulting_fp + "_results.csv"))
+        # if reporting_kwargs.get("run_extract_common_patterns"):
+        #             outputs.append(calc_jaccard(resulting_fp + "_results.csv"))
+
         with open(
             resulting_fp + "_text_similarity_report.txt",
             "w+",
