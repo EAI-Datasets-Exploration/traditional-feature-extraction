@@ -444,7 +444,7 @@ def sample_and_compute_jaccard(references: list, n_samples: int) -> list:
 def summary_jaccard(
     fp: str, nl_column="nl_instructions", n_samples=1000, num_workers=100
 ):
-    """Compute tree kernel distance summary using parallel processing."""
+    """Compute jaccard distance summary using parallel processing."""
     # Load the CSV file and extract the references
     df = pd.read_csv(fp)
     print(df.info())
