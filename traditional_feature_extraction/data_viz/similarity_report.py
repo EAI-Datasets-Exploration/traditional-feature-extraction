@@ -2,9 +2,12 @@
 Generates text files that summarize the text 
 similarity metrics.
 """
+import random
+import json
 from diversity import compression_ratio, homogenization_score, ngram_diversity_score
 import pandas as pd
 import numpy as np
+from traditional_feature_extraction.feature_extraction.utils import flatten_and_combine_dicts, flatten_nested_list
 from traditional_feature_extraction.similarity_measures.nlg_metrics import (
     summary_bleu,
     summary_rouge,
@@ -12,6 +15,7 @@ from traditional_feature_extraction.similarity_measures.nlg_metrics import (
     summary_bertscore,
     summary_treekernel,
     summary_jaccard,
+    summary_extract_patterns,
 )
 
 
@@ -176,4 +180,33 @@ def calc_ngram_diversity(fp, nl_column="nl_instructions", n=4):
     output = (
         f"Ngram Diversity Score for {n}-gram: {cr:.4f}. "
     )
+    return output
+
+
+def calc_common_patterns(fp, nl_column="nl_instructions", n_trials=3, n_samples=10000, pattern_len=4, top_k=5):
+    extract_patterns = []
+    for _ in range(n_trials):
+        extract_patterns.append(
+            summary_extract_patterns(
+                fp=fp,
+                nl_column=nl_column,
+                n_samples=n_samples,
+                pattern_len=pattern_len,
+                top_k=top_k
+            )
+        )
+
+
+    flattened_results = flatten_nested_list(extract_patterns)
+
+    combined_dict = flatten_and_combine_dicts(flattened_results)
+
+    for key, value in combined_dict.items():
+        if isinstance(value, set):
+            combined_dict[key] = list(value)
+
+
+    # Adjust the formatting to show the values with 4 decimal places
+    output = f"Common Parses:\n{json.dumps(combined_dict, indent=4)}"
+    
     return output

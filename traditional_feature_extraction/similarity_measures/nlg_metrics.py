@@ -8,6 +8,7 @@ how similar natural language instructions in EAI VLN datasets are to one another
 This approach was first proposed by Zhang et al. [https://arxiv.org/pdf/2005.03086]
 """
 from collections import Counter
+from  diversity import extract_patterns
 import evaluate
 import torch
 import multiprocessing as mp
@@ -16,6 +17,7 @@ import pandas as pd
 import numpy as np
 import random
 from nltk import Tree
+from traditional_feature_extraction.feature_extraction.utils import flatten_and_combine_dicts
 from concurrent.futures import ProcessPoolExecutor
 
 
@@ -468,3 +470,36 @@ def summary_jaccard(
     avg_jacc = np.mean(jaccard_scores)
 
     return avg_jacc
+
+
+def sample_and_compute_patterns(references: list, n_samples: int, pattern_len=4, top_k=10) -> dict:
+    subset = random.choices(references, k=n_samples)
+    patterns = extract_patterns(subset, pattern_len, top_k)
+    return patterns
+
+
+def summary_extract_patterns(
+    fp: str, nl_column="nl_instructions", n_samples=10000, pattern_len=4, top_k=5, num_workers=4
+):
+    """Compute extract patterns distance summary using parallel processing."""
+    # Load the CSV file and extract the references
+    df = pd.read_csv(fp)
+    references = list(df[nl_column])
+    random.shuffle(references)
+
+    # Split the workload into batches for parallel processing
+    batch_size = n_samples // num_workers
+
+    # Parallel processing of tree kernel computation
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        futures = [
+            executor.submit(sample_and_compute_patterns, references, batch_size, pattern_len, top_k)
+            for _ in range(num_workers)
+        ]
+
+    # Gather the results from the futures
+    common_patterns = []
+    for future in futures:
+        common_patterns.append(future.result())
+    
+    return common_patterns

@@ -5,6 +5,7 @@ analyzing and characterizing the complexity of each HRI dataset.
 Each function expects a pandas dataframe with relevantly defined
 column names. Then each function outputs a pandas dataframe.
 """
+from collections import defaultdict
 from functools import partial
 import multiprocessing as mp
 from concurrent.futures import ProcessPoolExecutor
@@ -226,3 +227,37 @@ def get_constituency_parse_tree(
 ###
 ### END: EVERYTHING TO DO WITH CONSTITUENCY PARSING GPU PARALLELIZATION!!!
 ###
+
+def flatten_nested_list(nested_list):
+    flat_list = []
+    for item in nested_list:
+        if isinstance(item, list):
+            flat_list.extend(flatten_nested_list(item))  # Recursively flatten lists
+        else:
+            flat_list.append(item)  # Append non-list items directly
+    return flat_list
+
+
+
+def flatten_and_combine_dicts(dict_list):
+    combined_dict = defaultdict(list)
+
+    for d in dict_list:
+        if isinstance(d, dict):  # Ensure the element is a dictionary
+            for key, value in d.items():
+                if isinstance(value, list):
+                    combined_dict[key].extend(value)
+                elif isinstance(value, set):  # Handle cases where the value is a set
+                    combined_dict[key].extend(list(value))  # Convert set to list before extending
+                else:
+                    combined_dict[key].append(value)
+        else:
+            print(f"gdi")
+
+    # Remove duplicates from the combined lists and handle cases where elements are not hashable
+    combined_dict = {
+        key: list(set(value)) if isinstance(value, list) else value
+        for key, value in combined_dict.items()
+    }
+
+    return dict(combined_dict)

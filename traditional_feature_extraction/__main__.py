@@ -33,6 +33,7 @@ from traditional_feature_extraction.data_viz.similarity_report import (
     calc_compression_rato,
     calc_homogenization,
     calc_ngram_diversity,
+    calc_common_patterns,
 )
 
 
@@ -155,8 +156,8 @@ if __name__ == "__main__":
             outputs.append(calc_homogenization(resulting_fp + "_results.csv"))
         if reporting_kwargs.get("run_ngram_diversity_score"):
                     outputs.append(calc_ngram_diversity(resulting_fp + "_results.csv"))
-        # if reporting_kwargs.get("run_extract_common_patterns"):
-        #             outputs.append(calc_jaccard(resulting_fp + "_results.csv"))
+        if reporting_kwargs.get("run_extract_common_patterns"):
+                    outputs.append(calc_common_patterns(resulting_fp + "_results.csv"))
 
         with open(
             resulting_fp + "_text_similarity_report.txt",
