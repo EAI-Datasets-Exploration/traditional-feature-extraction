@@ -1,1 +1,3 @@
-Average Jaccard pairwise distances: 0.1429. Stddev: 0.0000.
+Compression Ratio: 158.8580. 
+Homogenization Score for rougel: 0.3020. 
+Ngram Diversity Score for 4-gram: 0.0030. 

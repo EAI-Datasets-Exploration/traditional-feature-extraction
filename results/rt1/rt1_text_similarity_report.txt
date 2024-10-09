@@ -1,1 +1,1 @@
-Average Jaccard pairwise distances: 0.1378. Stddev: 0.0012.
+Ngram Diversity Score for 4-gram: 0.0000. 
